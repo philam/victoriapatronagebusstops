@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>Victoria Bus Stop Patronage</title>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet' />
+    <link href='https://www.mapbox.com/base/latest/base.css' rel='stylesheet' />
+    <style>
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+
+    #locations {
+      position: absolute;
+    }
+	
+	.legend {
+	  background-color: #fff;
+	  border-radius: 3px;
+	  bottom: 30px;
+	  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+	  font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+	  padding: 10px;
+	  position: absolute;
+	  right: 10px;
+	  z-index: 1;
+	}
+
+	.legend h4 {
+	  margin: 0 0 10px;
+	}
+
+	.legend p {
+	  margin-left: 30px;
+	  position: absolute;
+	  display: block;
+	  top: 0;
+	}
+
+	.legend div {
+	  position: relative;
+	}
+
+	.legend div span {
+	  border-radius: 50%;
+	  display: inline-block;
+	  margin-right: 5px;
+	  opacity: 0.8;
+	  background-color: #d49a66;
+	}
+	
+	    #menu {
+        background: #fff;
+        position: absolute;
+        z-index: 1;
+        top: 10px;
+        right: 10px;
+        border-radius: 3px;
+        width: 120px;
+        border: 1px solid rgba(0,0,0,0.4);
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    #menu a {
+        font-size: 13px;
+        color: #404040;
+        display: block;
+        margin: 0;
+        padding: 0;
+        padding: 10px;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(0,0,0,0.25);
+        text-align: center;
+    }
+
+    #menu a:last-child {
+        border: none;
+    }
+
+    #menu a:hover {
+        background-color: #f8f8f8;
+        color: #404040;
+    }
+
+    #menu a.active {
+        background-color: #3887be;
+        color: #ffffff;
+    }
+
+    #menu a.active:hover {
+        background: #3074a4;
+    }
+    </style>
+</head>
+
+<body>
+	<nav id="menu"></nav>
+    <div id='map'></div>
+    <script>
+	
+    mapboxgl.accessToken = 'pk.eyJ1IjoicGhpbGlwZGFyIiwiYSI6ImNqZmx1N2wzbTBva2ozM21rbnFjN21uZDgifQ.tK-myvugjB-kOzfpAFB0DA'; // Put your Mapbox Public Access token here
+
+    // Load a new map in the 'map' HTML div
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/philipdar/cjfn9x70q0p4y2rpjdoa9ift5',
+      center: [145.004212, -37.738672],
+      zoom: 12
+    });
+	
+	// Legend rubbish
+	// Store an array of quantiles
+	var max = 1200;
+	var fifth = 1200 / 5;
+	var quantiles = [];
+	for (i = 0; i < 5; i++) {
+	  var quantile = (fifth + i) * fifth;
+	  quantiles.push(quantile);
+	}
+	
+	// Popup
+	// When a click event occurs near a place, open a popup at the location of
+	// the feature, with HTML description from its properties
+	map.on('click', function(e) {
+	  var features = map.queryRenderedFeatures(e.point, { layers: ['victoria-bus-stop-boardings-data'] });
+
+	  // if the features have no info, return nothing
+	  if (!features.length) {
+		return;
+	  }
+
+	var feature = features[0];
+	  var popup = new mapboxgl.Popup()
+	  .setLngLat(feature.geometry.coordinates)
+	  .setHTML('<div id=\'popup\' class=\'popup\' style=\'z-index: 10;\'> <h5> Detail: </h5>' +
+	  '<ul class=\'list-group\'>' +
+	  '<li class=\'list-group-item\'> Weekday: ' + feature.properties['Normal Weekday'] + ' </li>' +
+	  '<li class=\'list-group-item\'> Saturday: ' + feature.properties['Saturday'] + ' </li>' +
+	  '<li class=\'list-group-item\'> Sunday: ' + feature.properties['Sunday'] + ' </li>' +
+	  '<li class=\'list-group-item\'> Public holiday: ' + feature.properties['Public Holiday'] + ' </li>' +
+	  '<li class=\'list-group-item\'> School holiday weekday: ' + feature.properties['School Holiday Weekday'] + ' </li></ul></div>')
+	  .addTo(map);
+	});
+	
+	// Popup for bus routes
+	// When a click event occurs near a place, open a popup at the location of
+	// the feature, with HTML description from its properties
+	map.on('click', function(e) {
+	  var features = map.queryRenderedFeatures(e.point, { layers: ['Public_Transport_Victoria__PT-2xp8fe'] });
+
+	  // if the features have no info, return nothing
+	  if (!features.length) {
+		return;
+	  }
+
+	var feature = features[0];
+	  var popup = new mapboxgl.Popup()
+	  .setLngLat(feature.geometry.coordinates)
+	  .setHTML('<div id=\'popup\' class=\'popup\' style=\'z-index: 10;\'> <h5> Route information: </h5>' +
+	  '<ul class=\'list-group\'>' +
+	  '<li class=\'list-group-item\'> Route: ' + feature.properties['DESCSHORT'] + ' </li>' +
+	  '<li class=\'list-group-item\'> Origin: ' + feature.properties['LINEFROM'] + ' </li>' +
+	  '<li class=\'list-group-item\'> Destination: ' + feature.properties['LINETO'] + ' </li></ul></div>')
+	  .addTo(map);
+	});
+
+	// Use the same approach as above to indicate that the symbols are clickable
+	// by changing the cursor style to 'pointer'
+	map.on('mousemove', function(e) {
+	  var features = map.queryRenderedFeatures(e.point, { layers: ['victoria-bus-stop-boardings-data'] });
+	  map.getCanvas().style.cursor = features.length ? 'pointer' : '';
+	});
+	
+    // Load the vector tile source
+    map.on('load', function() {
+      // Add the circle layer to the map
+      map.addLayer({
+        id: 'Bus stops',
+        type: 'circle',
+        source: {
+          type: 'vector',
+          url: 'mapbox://philipdar.cjfninp0n1lnh32ryjj9mqymx-7hde3' // Your Mapbox tileset Map ID
+        },
+        'source-layer': 'vicbusstoppatronagenodesc', // name of tilesets
+			paint: {
+			  'circle-color': '#D49A66',
+			  // Add data-driven styles for circle radius
+			  'circle-radius': {
+				property: 'Normal Weekday',
+				type: 'exponential',
+				stops: [
+				  [1, 2],
+				  [1300, 20],
+				  [3699, 32]
+				]
+			  },
+			  'circle-opacity': 0.8
+			}
+		});
+		// map.addLayer({
+			// id: 'Bus routes',
+			// type: 'line',
+			// source: {
+			  // type: 'vector',
+			  // url: 'mapbox://philipdar.bqk4wubv' // Your Mapbox tileset Map ID
+			// },
+			// 'source-layer': 'Public_Transport_Victoria__PT-2xp8fe', // name of tilesets
+				// paint: {
+				  // 'line-color': '#9900cc',
+				  // 'line-width': 0.5
+				// }
+			// });
+	});
+	
+	// Toggle layers
+	var toggleableLayerIds = [ 'Bus stops' ];
+
+	for (var i = 0; i < toggleableLayerIds.length; i++) {
+		var id = toggleableLayerIds[i];
+
+		var link = document.createElement('a');
+		link.href = '#';
+		link.className = 'active';
+		link.textContent = id;
+
+		link.onclick = function (e) {
+			var clickedLayer = this.textContent;
+			e.preventDefault();
+			e.stopPropagation();
+
+			var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+			if (visibility === 'visible') {
+				map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+				this.className = '';
+			} else {
+				this.className = 'active';
+				map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+			}
+		};
+
+		var layers = document.getElementById('menu');
+		layers.appendChild(link);
+	}
+	
+	// Add zoom and rotation controls to the map.
+	var nav = new mapboxgl.NavigationControl();
+		map.addControl(nav, 'top-left');
+    </script>
+	<div id='legend' class='legend'>
+		 <h4>Bus stop patronage</h4>
+	</div>
+</body>
+
+</html>
