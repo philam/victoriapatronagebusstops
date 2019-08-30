@@ -147,7 +147,7 @@
 	
 	// Popup for bus routes
 	map.on('click', function(e) {
-	  var features = map.queryRenderedFeatures(e.point, { layers: ['Public_Transport_Victoria__PT-2xp8fe'] });
+	  var features = map.queryRenderedFeatures(e.point, { layers: ['South_Victoria_Bus_Routes_OSM-atstdh'] });
 
 	  // if features have no info then return nothing
 	  if (!features.length) {
@@ -208,9 +208,6 @@
 				   'line-color': '#9900cc',
 				   'line-width': 0.5
 				 }
-			 'layout': {
-				'text-field': ["get", "ref"],
-			 }
 			 });
 	});
 	
@@ -249,9 +246,9 @@
 	var nav = new mapboxgl.NavigationControl();
 		map.addControl(nav, 'top-left');
     </script>
-	// <div id='legend' class='legend'>
-		// <h4>Bus stop patronage</h4>
-	// </div>
+	 <!-- <div id='legend' class='legend'>
+		 <h4>Bus stop patronage</h4>
+	 </div> -->
 </body>
 
 </html>
