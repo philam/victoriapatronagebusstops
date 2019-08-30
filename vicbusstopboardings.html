@@ -203,23 +203,23 @@
 			  'circle-opacity': 0.8
 			}
 		});
-		// map.addLayer({
-			// id: 'Bus routes',
-			// type: 'line',
-			// source: {
-			  // type: 'vector',
-			  // url: 'mapbox://philipdar.bqk4wubv' // Your Mapbox tileset Map ID
-			// },
-			// 'source-layer': 'Public_Transport_Victoria__PT-2xp8fe', // name of tilesets
-				// paint: {
-				  // 'line-color': '#9900cc',
-				  // 'line-width': 0.5
-				// }
-			// });
+		 map.addLayer({
+			 id: 'Bus routes',
+			 type: 'line',
+			 source: {
+			   type: 'vector',
+			   url: 'mapbox://philipdar.bqk4wubv' // Your Mapbox tileset Map ID
+			 },
+			 'source-layer': 'Public_Transport_Victoria__PT-2xp8fe', // name of tilesets
+				 paint: {
+				   'line-color': '#9900cc',
+				   'line-width': 0.5
+				 }
+			 });
 	});
 	
 	// Toggle layers
-	var toggleableLayerIds = [ 'Bus stops' ];
+	var toggleableLayerIds = [ 'Bus routes' ];
 
 	for (var i = 0; i < toggleableLayerIds.length; i++) {
 		var id = toggleableLayerIds[i];
