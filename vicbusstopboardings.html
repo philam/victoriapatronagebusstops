@@ -159,9 +159,7 @@
 	  .setLngLat(feature.geometry.coordinates)
 	  .setHTML('<div id=\'popup\' class=\'popup\' style=\'z-index: 10;\'> <h5> Route information: </h5>' +
 	  '<ul class=\'list-group\'>' +
-	  '<li class=\'list-group-item\'> Route: ' + feature.properties['DESCSHORT'] + ' </li>' +
-	  '<li class=\'list-group-item\'> Origin: ' + feature.properties['LINEFROM'] + ' </li>' +
-	  '<li class=\'list-group-item\'> Destination: ' + feature.properties['LINETO'] + ' </li></ul></div>')
+	  '<li class=\'list-group-item\'> Route: ' + feature.properties['route'] + ' </li></ul></div>')
 	  .addTo(map);
 	});
 
