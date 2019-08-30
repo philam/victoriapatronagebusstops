@@ -147,7 +147,7 @@
 	
 	// Popup for bus routes
 	map.on('click', function(e) {
-	  var features = map.queryRenderedFeatures(e.point, { layers: ['South_Victoria_Bus_Routes_OSM-atstdh'] });
+	  var features = map.queryRenderedFeatures(e.point, { layers: ['south-victoria-bus-routes-osm-atstdh'] });
 
 	  // if features have no info then return nothing
 	  if (!features.length) {
