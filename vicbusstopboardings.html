@@ -106,7 +106,6 @@
 	
     mapboxgl.accessToken = 'pk.eyJ1IjoicGhpbGlwZGFyIiwiYSI6ImNqZmx1N2wzbTBva2ozM21rbnFjN21uZDgifQ.tK-myvugjB-kOzfpAFB0DA'; // Put your Mapbox Public Access token here
 
-    // Load a new map in the 'map' HTML div
     var map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/philipdar/cjfn9x70q0p4y2rpjdoa9ift5',
@@ -125,8 +124,6 @@
 	}
 	
 	// Popup
-	// When a click event occurs near a place, open a popup at the location of
-	// the feature, with HTML description from its properties
 	map.on('click', function(e) {
 	  var features = map.queryRenderedFeatures(e.point, { layers: ['victoria-bus-stop-boardings-data'] });
 
@@ -149,12 +146,10 @@
 	});
 	
 	// Popup for bus routes
-	// When a click event occurs near a place, open a popup at the location of
-	// the feature, with HTML description from its properties
 	map.on('click', function(e) {
 	  var features = map.queryRenderedFeatures(e.point, { layers: ['Public_Transport_Victoria__PT-2xp8fe'] });
 
-	  // if the features have no info, return nothing
+	  // if features have no info then return nothing
 	  if (!features.length) {
 		return;
 	  }
@@ -170,14 +165,12 @@
 	  .addTo(map);
 	});
 
-	// Use the same approach as above to indicate that the symbols are clickable
-	// by changing the cursor style to 'pointer'
+	// Curser pointer
 	map.on('mousemove', function(e) {
 	  var features = map.queryRenderedFeatures(e.point, { layers: ['victoria-bus-stop-boardings-data'] });
 	  map.getCanvas().style.cursor = features.length ? 'pointer' : '';
 	});
-	
-    // Load the vector tile source
+
     map.on('load', function() {
       // Add the circle layer to the map
       map.addLayer({
@@ -218,7 +211,7 @@
 			 });
 	});
 	
-	// Toggle layers
+	// Toggle
 	var toggleableLayerIds = [ 'Bus routes' ];
 
 	for (var i = 0; i < toggleableLayerIds.length; i++) {
@@ -249,13 +242,13 @@
 		layers.appendChild(link);
 	}
 	
-	// Add zoom and rotation controls to the map.
+	// Zoom and rotation
 	var nav = new mapboxgl.NavigationControl();
 		map.addControl(nav, 'top-left');
     </script>
-	<div id='legend' class='legend'>
-		 <h4>Bus stop patronage</h4>
-	</div>
+	// <div id='legend' class='legend'>
+		// <h4>Bus stop patronage</h4>
+	// </div>
 </body>
 
 </html>
