@@ -165,7 +165,7 @@
 
 	// Curser pointer
 	map.on('mousemove', function(e) {
-	  var features = map.queryRenderedFeatures(e.point, { layers: ['victoria-bus-stop-boardings-data'] });
+	  var features = map.queryRenderedFeatures(e.point, { layers: ['victoria-bus-stop-boardings-data'] ['south-victoria-bus-routes-osm-atstdh'] });
 	  map.getCanvas().style.cursor = features.length ? 'pointer' : '';
 	});
 
