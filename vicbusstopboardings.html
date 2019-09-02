@@ -109,8 +109,8 @@
     var map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/philipdar/cjfn9x70q0p4y2rpjdoa9ift5',
-      center: [145.004212, -37.738672],
-      zoom: 12
+      center: [144.963238, -37.814236],
+      zoom: 10
     });
 	
 	// Legend rubbish
@@ -137,6 +137,7 @@
 	  .setLngLat(feature.geometry.coordinates)
 	  .setHTML('<div id=\'popup\' class=\'popup\' style=\'z-index: 10;\'> <h5> Detail: </h5>' +
 	  '<ul class=\'list-group\'>' +
+	  '<li class=\'list-group-item\'> Stop ID: ' + feature.properties['Stop ID'] + ' </li>' +
 	  '<li class=\'list-group-item\'> Weekday: ' + feature.properties['Normal Weekday'] + ' </li>' +
 	  '<li class=\'list-group-item\'> Saturday: ' + feature.properties['Saturday'] + ' </li>' +
 	  '<li class=\'list-group-item\'> Sunday: ' + feature.properties['Sunday'] + ' </li>' +
@@ -170,23 +171,36 @@
 	});
 
     map.on('load', function() {
-      // Add the circle layer to the map
+	  		 map.addLayer({
+			 id: 'Bus routes',
+			 type: 'line',
+			 source: {
+			   type: 'vector',
+			   url: 'mapbox://philipdar.a11rqljm'
+			 },
+			 'source-layer': 'ptvbusroutes-2i0oyp',
+				 paint: {
+				   'line-color': '#FF8200',
+				   'line-width': 0.3,
+				   //'line-opacity': 0.8
+				 }
+			 });
       map.addLayer({
         id: 'Bus stops',
         type: 'circle',
         source: {
           type: 'vector',
-          url: 'mapbox://philipdar.cjfninp0n1lnh32ryjj9mqymx-7hde3' // Your Mapbox tileset Map ID
+          url: 'mapbox://philipdar.cjfninp0n1lnh32ryjj9mqymx-7hde3' 
         },
-        'source-layer': 'vicbusstoppatronagenodesc', // name of tilesets
+        'source-layer': 'vicbusstoppatronagenodesc',
 			paint: {
-			  'circle-color': '#D49A66',
-			  // Add data-driven styles for circle radius
+			  'circle-color': '#79A3B3',
 			  'circle-radius': {
 				property: 'Normal Weekday',
 				type: 'exponential',
 				stops: [
 				  [1, 2],
+				  [100, 6],
 				  [1300, 20],
 				  [3699, 32]
 				]
@@ -194,19 +208,19 @@
 			  'circle-opacity': 0.8
 			}
 		});
-		 map.addLayer({
-			 id: 'Bus routes',
-			 type: 'line',
-			 source: {
-			   type: 'vector',
-			   url: 'mapbox://philipdar.3fucew0x' // Your Mapbox tileset Map ID
-			 },
-			 'source-layer': 'South_Victoria_Bus_Routes_OSM-atstdh', // name of tilesets
-				 paint: {
-				   'line-color': '#9900cc',
-				   'line-width': 0.5
-				 }
-			 });
+	});
+	
+	// Pointer centre
+	map.on('click', 'Bus stops', function (e) {
+	map.flyTo({center: e.features[0].geometry.coordinates});
+	});
+	 
+	map.on('mouseenter', 'Bus stops', function () {
+	map.getCanvas().style.cursor = 'pointer';
+	});
+	 
+	map.on('mouseleave', 'Bus stops', function () {
+	map.getCanvas().style.cursor = '';
 	});
 	
 	// Toggle
